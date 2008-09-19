@@ -1,7 +1,14 @@
 module Arturaz
   module FlashDivs
-    # Output divs for flash messages.
-    def flash_divs(options={})
+    # Output divs for flash messages. Can be used in block style:
+    #
+    # <code>
+    #   <% flash_divs do |html| %>
+    #      Your wrapping HTML here
+    #      <%= html %>
+    #   <% end %>
+    # </code>
+    def flash_divs(options={}, &block)
       options = {
         :show_notice => true,
         :show_error => true,
@@ -24,6 +31,12 @@ module Arturaz
             "</div>"
         end
         html += "</div>"
+      end
+      
+      if block
+        concat(capture(html, &block), block.binding) unless html.blank?
+      else
+        html
       end
     end
   end
